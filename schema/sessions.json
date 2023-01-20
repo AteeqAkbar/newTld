@@ -1,0 +1,15 @@
+{
+    "topic":"Intro to React",
+    "description": "",
+    "trainer": "helloibm#0007",
+    "skills": ["react", "javascript", "nosql"],
+    "dateTime": {
+        "__time__": "2022-11-20T13:00:00.292Z"
+    },
+    "reviews" : {
+        "ateeq#1237": "very informatiove session",
+
+        "javascript": true,
+        "angular": false
+    }
+}

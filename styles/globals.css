@@ -1,0 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Raleway", sans-serif;
+  max-width: 1440px;
+  margin: auto;
+}
+.fc-day-past {
+  background-color: rgb(227, 83, 83);
+}
+.fc-day-future {
+  background-color: azure;
+}
+
+** {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

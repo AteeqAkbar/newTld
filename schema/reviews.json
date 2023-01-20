@@ -1,0 +1,9 @@
+{
+    "userName": "helloibm#007",
+    "review": {
+        "sessionId": "session123",
+        "sessionTitle": "Introduction to React",
+        "message": "I found this session to be very informative",
+        "startRating": 4 
+    } 
+}

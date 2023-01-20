@@ -1,0 +1,32 @@
+{
+    "_id":"",
+    "userName": "helloibm#001",
+    "isFeatured": false,
+    "summary": {
+        "firstName":"",
+        "lastName":"",
+        "email":"",
+        "intro":"",
+        "picUrl":"",
+        "introVideo":"",
+        "followers":0,
+        "following":0
+    },
+    "links": {
+        "github":"",
+        "linkedId":"",
+        "twitter":"",
+        "website": ""
+    },
+    "__collections__":{
+        "reviews": {
+
+        },
+        "followers": {
+
+        },
+        "following": {
+            
+        } 
+    }
+}
