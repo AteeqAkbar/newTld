@@ -1,7 +1,6 @@
 import Link from "next/link";
 import React from "react";
 import { useRef, useState } from "react";
-import { LoginWithEmailPassword } from "../utils_firebase/users";
 import Image from "next/image";
 
 export let switchAuthModeHandler;
