@@ -76,9 +76,9 @@ function Table(users) {
           <table className="table-auto w-full" {...getTableProps()}>
             <thead className="text-md text-left font-bold uppercase text-gray-900 bg-[#dbdbdb]">
               {headerGroups.map((headerGroup) => (
-                <tr key={math.random() + 5} {...headerGroup.getHeaderGroupProps()}>
+                <tr key={Math.random() + 5} {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column) => (
-                    <th key={math.random() + 5}
+                    <th key={Math.random() + 5}
                       className="p-5 whitespace-nowrap"
                       {...column.getHeaderProps(column.getSortByToggleProps())}
                     >
@@ -102,13 +102,13 @@ function Table(users) {
               {page.map((row) => {
                 prepareRow(row);
                 return (
-                  <tr key={math.random() + 5}
+                  <tr key={Math.random() + 5}
                     className="even:bg-gray-50 odd:hover:bg-blue-50"
                     {...row.getRowProps()}
                   >
                     {row.cells.map((cell) => {
                       return (
-                        <td key={math.random() + 5}
+                        <td key={Math.random() + 5}
                           className="p-2 whitespace-nowrap "
                           {...cell.getCellProps()}
                         >
