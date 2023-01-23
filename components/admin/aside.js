@@ -42,7 +42,7 @@ function Aside({ selectHandler }) {
                   className="flex items-center bg-white gap-2 hover:bg-yellow-50 rounded-xl font-bold text-lg text-gray-900 py-3 px-4"
                 >
                   <SiGooglemeet className="w-[25px] h-[25px]" />
-                  Request Sessions
+                  Requested Sessions
                 </Link>
               </li>
             </ul>
