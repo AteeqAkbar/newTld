@@ -3,6 +3,7 @@ import { auth } from "../utils_firebase/config";
 import { AuthContext } from "../contexts/auth_context";
 
 import { toast } from "react-toastify";
+import { getSingleUser } from "../utils_firebase/users";
 
 export const useSinin = () => {
   const { setUser } = useContext(AuthContext);

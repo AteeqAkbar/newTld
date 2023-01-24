@@ -41,15 +41,7 @@ function SessionTable(sessions) {
     {
       Header: "Edit",
       Cell: (row) => (
-        <Link href={""} className="flex">
-          {/* <Image
-            src={row.row.original.image}
-            className="rounded-full"
-            alt="img"
-            fill
-          /> */}
-          {/* <BiLastPage className="w-[25px] h-[25px]" /> */}
-
+        <Link href={"/admin/session/sa"} className="flex">
           <MdEditNote className="m-auto w-[25px] h-[25px]" />
         </Link>
       ),

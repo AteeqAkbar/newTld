@@ -14,7 +14,7 @@ const VideoCard = () => {
       </div>
 
       <div className=" w-full">
-        <div className="flex justify-between ">
+        <div className="flex flex-wrap justify-between ">
           <div className="w-[90%] xs:w-[80%] sm:w-[45%]  lg:w-[30.2%] xl:w-[23.18%]">
             <div className=" flex flex-col gap-4 mb-8  bg-[#F4F4F4] rounded-[12px] overflow-hidden ">
               <div className="relative mx-auto w-[100%] h-[200px] ">

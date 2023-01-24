@@ -1,18 +1,23 @@
 import Link from "next/link";
 import React from "react";
-import { useRef, useState } from "react";
+import { useRef, useState, useContext } from "react";
+import { useSinin } from "../hooks/useSignin";
 import Image from "next/image";
+import { loginWithGoogle } from "../utils_firebase/users";
+import { useRouter } from "next/router";
+import { AuthContext } from "../contexts/auth_context";
+import { ToastContainer, toast } from "react-toastify";
 
 export let switchAuthModeHandler;
 
 const Index = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  // const [isLogin, setIsLogin] = useState(false);
 
-  const inputFirstName = useRef();
-  const inputLastName = useRef();
+  const { setUser } = useContext(AuthContext);
+  const router = useRouter();
   const inputGamil = useRef();
   const inputPassword = useRef();
-  const inputConfirmPassword = useRef();
+  const { signin, errors } = useSinin();
 
   let formData;
 
@@ -24,16 +29,17 @@ const Index = () => {
   function submitHandler(event) {
     event.preventDefault();
 
-    if (isLogin) {
-      const enteredGmail = inputGamil.current.value;
-      const enteredPassword = inputPassword.current.value;
-      formData = {
-        gmail: enteredGmail,
-        password: enteredPassword,
-      };
-    }
+    const enteredGmail = inputGamil.current.value;
+    const enteredPassword = inputPassword.current.value;
+    formData = {
+      gmail: enteredGmail,
+      password: enteredPassword,
+    };
 
-    LoginWithEmailPassword();
+    console.log(formData);
+    signin(formData, router);
+
+    // LoginWithEmailPassword(formData, router);
   }
 
   return (
@@ -75,10 +81,10 @@ const Index = () => {
                 ref={inputGamil}
               />
               <input
-                type="text"
-                placeholder="Enter your Email"
+                type="password"
+                placeholder="Enter your Password"
                 className="border-[1px] placeholder:pl-[10px] border-[#1C2D56] h-[48px] rounded-[8px] w-full "
-                ref={inputGamil}
+                ref={inputPassword}
               />
             </div>
 
@@ -95,13 +101,18 @@ const Index = () => {
             </div>
 
             <div className="w-[32.22%] gap-[5px] flex justify-between mx-auto mb-[15.57%] mt-[64px]">
-              <Image
-                src="/img/Frame 77.png"
-                alt=""
-                height={56}
-                width={56}
-                className="object-cover"
-              />
+              <div
+                onClick={() => loginWithGoogle(router, setUser, toast)}
+                className="relative h-[52px] w-[52px]"
+              >
+                <Image
+                  src="/img/Frame 77.png"
+                  alt=""
+                  height={56}
+                  width={56}
+                  className="object-cover"
+                />
+              </div>
               <Image
                 src="/img/Frame 78.png"
                 alt=""
