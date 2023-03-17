@@ -11,7 +11,14 @@ import { ToastContainer, toast } from "react-toastify";
 export let switchAuthModeHandler;
 
 const Index = () => {
-  // const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+
+  // Validation
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(null);
+  const [password, setPassword] = useState("");
+  const [passError, setPassError] = useState(null);
+  // end Validation
 
   const { setUser } = useContext(AuthContext);
   const router = useRouter();
@@ -20,6 +27,28 @@ const Index = () => {
   const { signin, errors } = useSinin();
 
   let formData;
+
+  // Email Validation Functions
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+  const handleChange = (event) => {
+    if (!isValidEmail(event.target.value)) {
+      setEmailError("Email is invalid");
+    } else {
+      setEmailError(null);
+    }
+    setEmail(event.target.value);
+  };
+  const passwordHandler = (e) => {
+    setPassword(e.target.value);
+    if (password.length < 5) {
+      setPassError("Password must be greater than 6");
+    } else {
+      setPassError(null);
+    }
+  };
+  // -----------------------------------
 
   switchAuthModeHandler = function () {
     setIsLogin((prevState) => !prevState);
@@ -31,13 +60,19 @@ const Index = () => {
 
     const enteredGmail = inputGamil.current.value;
     const enteredPassword = inputPassword.current.value;
-    formData = {
-      gmail: enteredGmail,
-      password: enteredPassword,
-    };
 
-    console.log(formData);
-    signin(formData, router);
+    if (enteredGmail === "" || enteredPassword === "") {
+      toast.error("Please Fill the form Carefully");
+      return;
+    } else {
+      formData = {
+        gmail: enteredGmail,
+        password: enteredPassword,
+      };
+
+      console.log(formData);
+      signin(formData, router);
+    }
 
     // LoginWithEmailPassword(formData, router);
   }
@@ -74,23 +109,45 @@ const Index = () => {
             </h1>
 
             <div className="w-[63.88%] mx-auto flex flex-col gap-6 justify-between">
-              <input
-                type="text"
-                placeholder="Enter your Email"
-                className="border-[1px] placeholder:pl-[10px] border-[#1C2D56] h-[48px] rounded-[8px] w-full "
-                ref={inputGamil}
-              />
-              <input
-                type="password"
-                placeholder="Enter your Password"
-                className="border-[1px] placeholder:pl-[10px] border-[#1C2D56] h-[48px] rounded-[8px] w-full "
-                ref={inputPassword}
-              />
+              <div>
+                <input
+                  type="text"
+                  placeholder="Enter your Email"
+                  className="border-[1px] pl-[10px] border-[#1C2D56] h-[48px] rounded-[8px] w-full "
+                  ref={inputGamil}
+                  onChange={handleChange}
+                />
+                {emailError && (
+                  <h2 className="absolute text-[red]">{emailError}</h2>
+                )}
+              </div>
+              <div>
+                <input
+                  type="password"
+                  placeholder="Enter your Password"
+                  className="border-[1px]  pl-[10px] border-[#1C2D56] h-[48px] rounded-[8px] w-full "
+                  ref={inputPassword}
+                  onChange={passwordHandler}
+                />
+                {passError && (
+                  <h2 className="absolute text-[red]">{passError}</h2>
+                )}
+              </div>
             </div>
 
-            <div className="mx-auto mb-4 bg-[#1C2D56]  rounded-[4px] py-[5px] px-[18px] mt-[32px]">
-              <button className="bg-[#1C2D56] px-3 text-[white]">Login</button>
-            </div>
+            {emailError == null && passError == null ? (
+              <div className="mx-auto mb-4 bg-[#1C2D56]  rounded-[4px] py-[5px] px-[18px] mt-[32px]">
+                <button className="bg-[#1C2D56] px-3 text-[white]">
+                  Login
+                </button>
+              </div>
+            ) : (
+              <div className="mx-auto mb-4  bg-gray-500  rounded-[4px] py-[5px] px-[18px] mt-[32px]">
+                <button className=" px-3 text-[white] " disabled>
+                  Login
+                </button>
+              </div>
+            )}
 
             <div className="  ">
               <h1 className="leading-[28px]  text-[16px] font-medium text-center">

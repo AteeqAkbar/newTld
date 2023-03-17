@@ -15,6 +15,14 @@ import { AuthContext } from "../../contexts/auth_context";
 const Index = () => {
   const { setUser } = useContext(AuthContext);
 
+  // Email Validation
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(null);
+  const [passError, setPassError] = useState(null);
+  const [matchError, setMatchError] = useState(null);
+  // ----------------
+
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(false);
 
@@ -27,6 +35,36 @@ const Index = () => {
   const { signup, error, isPanding } = useSinup();
   const { signin, errors } = useSinin();
   let formData;
+
+  // Email Validation Functions
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+  const handleChange = (event) => {
+    if (!isValidEmail(event.target.value)) {
+      setEmailError("Email is invalid");
+    } else {
+      setEmailError(null);
+    }
+    setEmail(event.target.value);
+  };
+  const passwordHandler = (e) => {
+    setPassword(e.target.value);
+    if (password.length < 5) {
+      setPassError("Password must be greater than 6");
+    } else {
+      setPassError(null);
+    }
+  };
+  const matchHandler = (e) => {
+    let confirmPass = e.target.value;
+    if (confirmPass !== password) {
+      setMatchError("Password does not match");
+    } else {
+      setMatchError(null);
+    }
+  };
+  // -----------------------------------
 
   function switchAuthModeHandler() {
     setIsLogin((prevState) => !prevState);
@@ -56,16 +94,27 @@ const Index = () => {
       const enteredPassword = inputPassword.current.value;
       const enteredConfirmPassword = inputConfirmPassword.current.value;
 
-      formData = {
-        firstName: enteredFirstName,
-        lastName: enteredLastName,
-        gmail: enteredGmail,
-        password: enteredPassword,
-        confirmPassword: enteredConfirmPassword,
-      };
-      // SignupWithEmailPassword(formData, router);
-      console.log(formData);
-      signup(formData, router);
+      if (
+        enteredFirstName === "" ||
+        enteredLastName === "" ||
+        enteredGmail === "" ||
+        enteredPassword === "" ||
+        enteredConfirmPassword === ""
+      ) {
+        toast.error("Please Fill the form Carefully");
+        return;
+      } else {
+        formData = {
+          firstName: enteredFirstName,
+          lastName: enteredLastName,
+          gmail: enteredGmail,
+          password: enteredPassword,
+          confirmPassword: enteredConfirmPassword,
+        };
+        // SignupWithEmailPassword(formData, router);
+        console.log(formData);
+        signup(formData, router);
+      }
     }
   }
 
@@ -81,7 +130,7 @@ const Index = () => {
               className="object-cover"
             />
           </div>
-          <div className="flex flex-col w-[100%] sm:w-[50%]">
+          <div className="relative flex flex-col w-[100%] sm:w-[50%]">
             <Link className="ml-[auto] mr-[6.198%]" href="/">
               <Image
                 src="/img/X.png"
@@ -131,11 +180,15 @@ const Index = () => {
               </div>
               <div className="relative">
                 <input
-                  type="text"
+                  type="email"
                   className="peer border-[1px] rounded-[8px] w-full placeholder-transparent  h-[48px] border-[black]  focus:outline-none pl-[16px] text-[16px] font-semibold "
-                  placeholder="First Name"
+                  placeholder="Enter your Email"
                   ref={inputGamil}
+                  onChange={handleChange}
                 />
+                {emailError && (
+                  <h2 className="absolute text-[red]">{emailError}</h2>
+                )}
                 <label className="pointer-events-none peer-focus:px-1 px-1 absolute left-[16px] -top-3.5 peer-placeholder-shown:top-3 peer-focus:-top-3.5 bg-white">
                   Enter your Email
                 </label>
@@ -146,9 +199,13 @@ const Index = () => {
                   <input
                     type="Password"
                     className="peer border-[1px] rounded-[8px] w-full placeholder-transparent  h-[48px] border-[black]  focus:outline-none pl-[16px] text-[16px] font-semibold "
-                    placeholder="First Name"
+                    placeholder="Password"
                     ref={inputPassword}
+                    onChange={passwordHandler}
                   />
+                  {passError && (
+                    <h2 className="absolute text-[red]">{passError}</h2>
+                  )}
                   <label className="pointer-events-none peer-focus:px-1 px-1 absolute left-[16px] -top-3.5 peer-placeholder-shown:top-3 peer-focus:-top-3.5 bg-white">
                     Password
                   </label>
@@ -171,9 +228,11 @@ const Index = () => {
                   <input
                     type="Password"
                     className="peer border-[1px] rounded-[8px] w-full placeholder-transparent  h-[48px] border-[black]  focus:outline-none pl-[16px] text-[16px] font-semibold "
-                    placeholder="First Name"
+                    placeholder="Confirm Password"
                     ref={inputConfirmPassword}
+                    onChange={matchHandler}
                   />
+                  {matchError && <h2 className="text-[red]">{matchError}</h2>}
                   <label className="pointer-events-none peer-focus:px-1 px-1 absolute left-[16px] -top-3.5 peer-placeholder-shown:top-3 peer-focus:-top-3.5 bg-white">
                     Password
                   </label>
@@ -182,7 +241,25 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="mx-auto w-[30%] xs:w-[20%] sm:w-[25%] md:w-[20%] lg:w-[14.85%] bg-[#1C2D56]  rounded-[4px] py-[5px] flex mt-[64px] sm:mt-[32px]">
+            {/* signup button with form valid */}
+
+            {emailError == null && passError == null && matchError == null ? (
+              <div className="mx-auto w-[30%] xs:w-[20%]  sm:w-[25%] md:w-[20%] lg:w-[14.85%] bg-[#1C2D56]  rounded-[4px] py-[5px] flex mt-[64px] sm:mt-[42px]">
+                <button className="bg-[#1C2D56] m-auto text-center text-[white]">
+                  Signup
+                </button>
+              </div>
+            ) : (
+              <div className="mx-auto w-[30%] xs:w-[20%]  sm:w-[25%] md:w-[20%] lg:w-[14.85%] bg-gray-500  rounded-[4px] py-[5px] flex mt-[64px] sm:mt-[42px]">
+                <button className=" m-auto text-center text-[white]" disabled>
+                  Signup
+                </button>
+              </div>
+            )}
+
+            {/* end signup button with form valid */}
+
+            {/* <div className="mx-auto w-[30%] xs:w-[20%] sm:w-[25%] md:w-[20%] lg:w-[14.85%] bg-[#1C2D56]  rounded-[4px] py-[5px] flex mt-[64px] sm:mt-[32px]">
               {!isPanding && (
                 <button className="bg-[#1C2D56] m-auto text-center text-[white]">
                   Signup
@@ -190,7 +267,7 @@ const Index = () => {
               )}
               {isPanding && (
                 <button className="bg-[#1C2D56] ml-3 text-[white] disabled">
-                  {/* {isLogin ? "Login" : "Signup"} */}loading
+                  loading
                 </button>
               )}
             </div>
@@ -203,7 +280,7 @@ const Index = () => {
               <p className="leading-[28px] text-[16px] font-medium text-center">
                 {errors}
               </p>
-            )}
+            )} */}
 
             <div className="mt-[16px]">
               <h1 className="leading-[28px] text-[16px] font-medium text-center">

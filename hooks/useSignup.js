@@ -22,7 +22,7 @@ export const useSinup = () => {
         data.gmail,
         data.password
       );
-
+      console.log(userCredential, "userdata");
       await userCredential.user.sendEmailVerification();
       await userCredential.user.updateProfile({
         displayName: data.firstName + data.lastName,
@@ -40,6 +40,7 @@ export const useSinup = () => {
             email: data.gmail,
             image: image,
           },
+          role: "user",
           points: {
             learningPoint: 100,
             coachingPoint: 100,

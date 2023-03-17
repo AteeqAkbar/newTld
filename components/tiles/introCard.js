@@ -110,7 +110,7 @@ const IntroCard = ({ data }) => {
         <div className="">
           <Link
             className="w-[37%] h-[3.13vh] flex mx-auto justify-evenly mb-[27px]"
-            href="/auth/profile"
+            href={userdata ? "#" : "/auth/profile"}
           >
             {userdata ? (
               ""

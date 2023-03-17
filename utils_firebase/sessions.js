@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import { fireStore } from "./config";
 import { getSingleUser, updatePoint } from "./users";
 // create Sesssion
-export const createSession = (data, router, id) => {
+export const createSession = (data, id, router) => {
   // Add a new document with a generated id.
   fireStore
     .collection("sessions")
@@ -23,13 +23,30 @@ export const createSession = (data, router, id) => {
     })
     .then((docRef) => {
       console.log("Document written with ID: ", docRef.id);
-      router.push("/");
+      if (router) {
+        router.push("/");
+      }
     })
     .catch((error) => {
       console.error("Error adding document: ", error);
     });
 };
 
+export const updateSessionMeeting = (data, id, router) => {
+  const ref = fireStore.collection("sessions").doc(id);
+  return ref
+    .update(
+      {
+        approve: "true" === data.Status,
+        meetingLink: data.Meeting,
+      }
+      // { merge: true }
+    )
+    .then(() => {
+      console.log("Document successfully updated!");
+      router.push("/admin");
+    });
+};
 // students register session
 export const registorSession = (sessionId, uid) => {
   var Ref = fireStore.collection("sessions").doc(sessionId);
@@ -65,6 +82,26 @@ export const getAllSessions = async (cond) => {
   }
   return allSessions;
 };
+// -----get all past sessions without link-----
+export const getAllPastSessionsWOLink = async () => {
+  // console.log(firebase.firestore.Timestamp.fromDate(new Date()), "date");
+  const allSessions = [];
+  const session = await fireStore
+    .collection("sessions")
+    .where("startTime", "<=", firebase.firestore.Timestamp.fromDate(new Date()))
+    .get();
+  // console.log(session, "session");
+  for (const doc of session.docs) {
+    const user = await getSingleUser(doc.data().instructor);
+    allSessions.push({
+      id: doc.id,
+      ...doc.data(),
+      instructor: user,
+    });
+  }
+  return allSessions;
+};
+
 // filter session by tags
 export const filterSessionByTag = async (tag) => {
   // console.log("filterSessionByTag",tag);

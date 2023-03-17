@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import { AuthContext } from "../../contexts/auth_context";
 import { useContext, useState } from "react";
 import Image from "next/image";
+import { FiSettings } from "react-icons/fi";
+import { GrUserSettings } from "react-icons/gr";
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
@@ -11,7 +13,15 @@ export default function NavBar() {
 
   const { signout, error, isPanding } = useSignout();
   const router = useRouter();
+  console.log(user.user);
 
+  let admin;
+
+  if (user.user.role === "superAdmin" || user.user.role === "admin") {
+    admin = true;
+  }
+
+  // if(user)
   return (
     <header>
       <div>
@@ -180,38 +190,72 @@ export default function NavBar() {
                   </div>
                 )}
                 {!user.user && (
-                  <button className=" h-[36px] w-24 bg-[#1C2D56] rounded group  hover:bg-[#E6E5E5]">
-                    <Link
-                      className="text-[#fff] font-['Raleway'] group-hover:text-[#1C2D56]"
-                      href="/loginPage"
-                    >
+                  <Link
+                    className="text-[#fff] font-['Raleway'] hover:text-[#1C2D56]  "
+                    href="/loginPage"
+                  >
+                    <button className=" h-[36px] w-24 bg-[#1C2D56] rounded group hover:font-bold hover:bg-[#E6E5E5]">
                       Log In
-                    </Link>
-                  </button>
+                    </button>
+                  </Link>
                 )}
               </div>
 
               {user.user && (
                 <div className="flex justify-center gap-[10px] items-center">
-                  <div className="font-medium leading-7  text-[#919191]">
-                    <Link
-                      href={`/auth/${user.user.uid}`}
-                      className="hover:text-[#1C2D56] px-3"
-                    >
-                      Porfile
-                    </Link>
+                  <div className="relative group">
+                    <button className="flex flex-row items-center w-full text-base text-left  bg-transparent rounded-lg  focus:outline-none ">
+                      <p className="text-center hover:font-medium font-['Raleway'] text-[16px] md:text-[15px] lg:text-[16px] leading-5 md:m-[10px] m-[16px] cursor-pointer">
+                        <GrUserSettings className="w-[25px] h-[25px]" />
+                      </p>
+                    </button>
+                    <div className="absolute left-[-100px] z-10 hidden  group-hover:block">
+                      <div className="px-2 pt-2 pb-4 bg-gray-50 rounded-[5px] shadow-lg">
+                        <div className="flex w-[175px] items-center flex-col gap-3">
+                          <div className="font-medium leading-7  text-[#919191]">
+                            <Link
+                              href={`/auth/${user.user.uid}`}
+                              className="hover:text-[#1C2D56] px-3"
+                            >
+                              Porfile
+                            </Link>
+                          </div>
+
+                          <div className="font-medium leading-7 text-[#919191]">
+                            <Link
+                              href={`/updatePassword`}
+                              className="hover:text-[#1C2D56] px-3"
+                            >
+                              change password
+                            </Link>
+                          </div>
+
+                          {admin && (
+                            <div className="font-medium leading-7 text-[#919191]">
+                              <Link
+                                href={`/admin`}
+                                className="hover:text-[#1C2D56] px-3"
+                              >
+                                Admin Penal
+                              </Link>
+                            </div>
+                          )}
+                          <button
+                            onClick={() => signout(router)}
+                            className=" h-[36px] w-24 bg-[#1C2D56] rounded group hover:border hover:bg-[#E6E5E5]"
+                          >
+                            <Link
+                              // className="text-[#fff] font-['Raleway'] group-hover:text-[#1C2D56]"
+                              className="text-[#fff] font-['Raleway'] group-hover:text-[#fff]"
+                              href="/loginPage"
+                            >
+                              Log Out
+                            </Link>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <button
-                    onClick={() => signout(router)}
-                    className=" h-[36px] w-24 bg-[#1C2D56] rounded group hover:border hover:bg-[#E6E5E5]"
-                  >
-                    <Link
-                      className="text-[#fff] font-['Raleway'] group-hover:text-[#1C2D56]"
-                      href="/loginPage"
-                    >
-                      Log Out
-                    </Link>
-                  </button>
                 </div>
               )}
             </div>

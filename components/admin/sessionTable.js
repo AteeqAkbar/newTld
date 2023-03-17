@@ -6,7 +6,9 @@ import { BiLastPage } from "react-icons/bi";
 import { MdEditNote } from "react-icons/md";
 import Link from "next/link";
 
-function SessionTable(sessions) {
+function SessionTable({ sessions, select }) {
+  let address =
+    select == "Past Sessions" ? "/admin/pastSession/" : "/admin/session/";
   const COLUMNS = [
     {
       Header: "Image",
@@ -41,7 +43,7 @@ function SessionTable(sessions) {
     {
       Header: "Edit",
       Cell: (row) => (
-        <Link href={"/admin/session/sa"} className="flex">
+        <Link href={`${address}${row.row.original.id}`} className="flex">
           <MdEditNote className="m-auto w-[25px] h-[25px]" />
         </Link>
       ),
@@ -49,7 +51,8 @@ function SessionTable(sessions) {
   ];
 
   // save session props data in mock data
-  const MOCK_DATA = sessions.sessions;
+  // const MOCK_DATA = sessions.sessions;
+  const MOCK_DATA = sessions;
   console.log(MOCK_DATA, "tav");
   const convertDate = (datetime) => {
     // functin to convert start and end session date time form seconds to datetime formate
@@ -107,7 +110,10 @@ function SessionTable(sessions) {
     <>
       <section className="min-h-[500px]">
         <div className="px-5 py-4 border-b border-gray-100">
-          <h2 className="text-[20px] font-semibold font-['Raleway']">Users</h2>
+          <h2 className="text-[20px] font-semibold font-['Raleway']">
+            {/* Sessions */}
+            {select}
+          </h2>
         </div>
         <div className="p-3">
           <table className="table-auto w-full" {...getTableProps()}>

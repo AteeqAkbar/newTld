@@ -23,14 +23,15 @@ const Home = () => {
 
   useEffect(() => {
     if (user.user) {
+      console.log(user.user);
       getAllSkillsWithImage().then((data) => setAllSkill(data));
       getSkillsByUserIntrest(
-        user.user.interest.length === 0 ? generalSkills : user.user.interest
+        user.user?.interest?.length === 0 ? generalSkills : user.user.interest
       ).then((data) => {
         setskill(data);
       });
       getSessionByUserSkills(
-        user.user.interest.length === 0 ? generalSkills : user.user.interest
+        user.user?.interest?.length === 0 ? generalSkills : user.user.interest
       ).then((data) => {
         setRecommendedSession(data);
       });
@@ -53,7 +54,7 @@ const Home = () => {
       <RegisteredSession />
       <MyMentor />
       {/* <FeatureMentor /> */}
-      {skill.length > 0 ? (
+      {skill?.length > 0 ? (
         <InterestSkills
           title={"Interested Skills"}
           dis={"Skills in which you are interested"}
@@ -62,7 +63,7 @@ const Home = () => {
       ) : (
         ""
       )}
-      {skill.length > 0 ? (
+      {skill?.length > 0 ? (
         <InterestSkills
           title={"Recomended Skills"}
           dis={"Skills Recomended for you"}

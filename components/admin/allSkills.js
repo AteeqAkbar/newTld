@@ -1,23 +1,22 @@
-// Show All Users in table
-import React, { useContext, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useTable, useSortBy, usePagination } from "react-table";
-// import { COLUMNS } from "./columns";
 import Image from "next/image";
 import { BiFirstPage } from "react-icons/bi";
 import { BiLastPage } from "react-icons/bi";
-import { AuthContext } from "../../contexts/auth_context";
-import { makeOrRemoveAdmin } from "../../utils_firebase/users";
+import { updateIndemandSkill } from "../../utils_firebase/skills";
 
-function Table(users) {
-  const { user } = useContext(AuthContext);
-  console.log(user.user.role);
+function AllSkills(skills) {
   const COLUMNS = [
+    {
+      Header: "Skill Title",
+      accessor: "name",
+    },
     {
       Header: "Image",
       Cell: (row) => (
         <div className="relative w-[40px] h-[40px] pl-[40px] flex items-center">
           <Image
-            src={row.row.original.summry.image}
+            src={row.row.original.image}
             className="rounded-full"
             alt="img"
             fill
@@ -26,119 +25,30 @@ function Table(users) {
       ),
     },
     {
-      Header: "Name",
-      accessor: "summry.displayName",
-    },
-
-    {
-      Header: "Email",
-      accessor: "summry.email",
-    },
-  ];
-  if (user.user.role === "superAdmin") {
-    COLUMNS.push({
-      Header: "Admin",
+      Header: "In Demands",
       Cell: (row) => (
         <select
           onChange={(e) => {
             console.log(e.target.value, row.row.original.id);
-            makeOrRemoveAdmin({
+            updateIndemandSkill({
               id: row.row.original.id,
-              role: e.target.value.toLowerCase(),
+              indemand: JSON.parse(e.target.value.toLowerCase()),
             });
           }}
           className="text-[22px]"
         >
-          <option selected={row.row.original.role === "user"} value={"user"}>
-            user
+          <option selected={row.row.original.indemand === true} value={true}>
+            true
           </option>
-          <option selected={row.row.original.role === "admin"} value={"admin"}>
-            Admin
+          <option selected={row.row.original.indemand === false} value={false}>
+            false
           </option>
         </select>
       ),
-    });
-    console.log(COLUMNS);
-  }
+    },
+  ];
 
-  // COLUMNS = [
-  //   {
-  //     Header: "Image",
-  //     Cell: (row) => (
-  //       <div className="relative w-[40px] h-[40px] pl-[40px] flex items-center">
-  //         <Image
-  //           src={row.row.original.summry.image}
-  //           className="rounded-full"
-  //           alt="img"
-  //           fill
-  //         />
-  //       </div>
-  //     ),
-  //   },
-  //   {
-  //     Header: "Name",
-  //     accessor: "summry.displayName",
-  //   },
-
-  //   {
-  //     Header: "Email",
-  //     accessor: "summry.email",
-  //   },
-
-  //   {
-  //     Header: `${user.user.role == "superAdmin" ? "Admin" : ""}`,
-  //     show: user.user.role === "superAdmin",
-  //     Cell: (row) => (
-  //       <select
-  //         onChange={(e) => {
-  //           console.log(e.target.value, row.row.original.id);
-  //           // makeOrRemoveAdmin({
-  //           //   id: row.row.original.id,
-  //           //   role: JSON.parse(e.target.value.toLowerCase()),
-  //           // });
-  //         }}
-  //         className="text-[22px]"
-  //       >
-  //         <option selected={row.row.original.role === "user"} value={"admin"}>
-  //           user
-  //         </option>
-  //         <option selected={row.row.original.role === "admin"} value={"remove"}>
-  //           Admin
-  //         </option>
-  //       </select>
-  //     ),
-  //   },
-
-  //   /*{
-  //     // Header: `${user.user.role == "superAdmin" ? "Admin" : ""}`,
-  //     Header: `${user.user.role == "superAdmin" ? "Admin" : "abc"}`,
-  //     Cell: (row) =>
-  //       `${user.user.role == "superAdmin"}` && (
-  //         <select
-  //           onChange={(e) => {
-  //             console.log(e.target.value, row.row.original.id);
-  //             // makeOrRemoveAdmin({
-  //             //   id: row.row.original.id,
-  //             //   role: JSON.parse(e.target.value.toLowerCase()),
-  //             // });
-  //           }}
-  //           className="text-[22px]"
-  //         >
-  //           <option selected={row.row.original.role === "user"} value={"admin"}>
-  //             user
-  //           </option>
-  //           <option
-  //             selected={row.row.original.role === "admin"}
-  //             value={"remove"}
-  //           >
-  //             Admin
-  //           </option>
-  //         </select>
-  //       ),
-  //   },*/
-  // ];
-
-  const MOCK_DATA = users.users;
+  const MOCK_DATA = skills.skills;
 
   const columns = useMemo(() => COLUMNS, []);
   const data = useMemo(() => MOCK_DATA, []);
@@ -177,7 +87,7 @@ function Table(users) {
     <>
       <section className="min-h-[500px]">
         <div className="px-5 py-4 border-b border-gray-100">
-          <h2 className="text-[20px] font-semibold font-['Raleway']">Users</h2>
+          <h2 className="text-[20px] font-semibold font-['Raleway']">Skills</h2>
         </div>
         <div className="p-3">
           <table className="table-auto w-full" {...getTableProps()}>
@@ -297,4 +207,4 @@ function Table(users) {
   );
 }
 
-export default Table;
+export default AllSkills;

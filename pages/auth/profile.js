@@ -142,7 +142,7 @@ export default function Profile() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-6">
+                    {/* <div className="grid grid-cols-3 gap-6">
                       <div className="col-span-3 sm:col-span-2">
                         <label
                           htmlFor="company-website"
@@ -150,9 +150,9 @@ export default function Profile() {
                         >
                           Learning
                         </label>
-                        {/* <SkillTag aness={"string jandi aa"} /> */}
+                        <SkillTag aness={"string jandi aa"} />
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="grid grid-cols-3 gap-6">
                       <div className="col-span-3 sm:col-span-2">

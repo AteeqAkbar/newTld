@@ -1,5 +1,6 @@
 import { auth, fireStore, googleProvider } from "./config";
 import firebase from "firebase/app";
+
 // import { toast } from "react-toastify";
 
 // get feature mentors
@@ -115,8 +116,10 @@ export default function updateImage(image, uid) {
       console.error("Error updating document: ", error);
     });
 }
-export const updatePoint = async(params) => {
-  var Ref = await fireStore.collection("users").doc("99iQxqVi3gc7ppU7Yvq8cSd26Wr1");
+export const updatePoint = async (params) => {
+  var Ref = await fireStore
+    .collection("users")
+    .doc("99iQxqVi3gc7ppU7Yvq8cSd26Wr1");
   return Ref.update({
     // "points.learningPoint": learningPoint-sessionPoins,
     "points.learningPoint": 100 - 100,
@@ -185,4 +188,125 @@ export const followUser = async (followingId, userId) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+//------- Make or Remove Admin---------
+export const makeOrRemoveAdmin = (data) => {
+  const ref = fireStore.collection("users").doc(data.id);
+
+  return ref
+    .update({
+      role: data.role,
+    })
+    .then(() => {
+      console.log("Document successfully updated!");
+    })
+    .catch((error) => {
+      // The document probably doesn't exist.
+      console.error("Error updating document: ", error);
+    });
+};
+
+// ---------Update Password---------
+export const updatePassword = (email, currentPassword, newPassword, router) => {
+  // Get the current user
+  const user = auth.currentUser;
+  // Create a credential object
+  const credential = firebase.auth.EmailAuthProvider.credential(
+    user.email,
+    currentPassword
+  );
+  if (user.email === email) {
+    // Reauthenticate the user
+    return user
+      .reauthenticateWithCredential(credential)
+      .then(() => {
+        // Update the user's password
+        user
+          .updatePassword(newPassword)
+          .then(() => {
+            console.log("Password updated successfully!");
+            router.push("/");
+          })
+          .catch((error) => {
+            console.error("Error updating password:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error reauthenticating user:", error);
+      });
+  } else {
+    console.log("blabalablalablaalbalalbal");
+  }
+};
+
+// ---------Create New User---------
+export const createNewUser = (data) => {
+  const image = data.image
+    ? data.image
+    : "https://www.iconpacks.net/icons/1/free-user-icon-295-thumb.png";
+  auth
+    .createUserWithEmailAndPassword(data.email, data.password)
+    .then((credential) => {
+      const uid = credential.user.uid;
+      console.log(uid);
+      fireStore
+        .collection("users")
+        .doc(uid)
+        .set({
+          uid: uid,
+          summry: {
+            displayName: data.firstName + " " + data.lastName,
+            email: data.email,
+            image: image,
+          },
+          role: "user",
+          points: {
+            learningPoint: 100,
+            coachingPoint: 100,
+          },
+          followers: [],
+          following: [],
+          interest: [],
+          learning: [],
+        });
+
+      // credential.user.sendEmailVerification();
+      // credential.user.updateProfile({
+      //   displayName: data.firstName + data.lastName,
+      // });
+      // fireStore
+      //   .collection("users")
+      //   .doc(credential.user.uid)
+      //   .set({
+      //     uid: credential.user.uid,
+      //     summry: {
+      //       displayName: data.firstName + " " + data.lastName,
+      //       email: data.gmail,
+      //       image: image,
+      //     },
+      //     role: "user",
+      //     points: {
+      //       learningPoint: 100,
+      //       coachingPoint: 100,
+      //     },
+      //     followers: [],
+      //     following: [],
+      //     interest: [],
+      //     learning: [],
+      //   });
+    });
+};
+
+// -------Get Rising Talents --------
+export const getRisings = async () => {
+  const result = [];
+  const data = await fireStore
+    .collection("users")
+    .where("risingTalents", "==", true)
+    .get();
+  data.docs.forEach((doc) => {
+    result.push({ id: doc.id, ...doc.data() });
+  });
+  return result;
 };
